@@ -12,7 +12,7 @@ namespace Assets.Scripts
     {
         const string URL = "http://hajkep.se/unity/NinjaRope/DbLayer.php";
         public static string User { get; set; }
-
+        static string apiKey = System.IO.File.ReadAllText(@"connections.config");
         static Persistent app;
 
         static DataLayer()
@@ -30,6 +30,7 @@ namespace Assets.Scripts
             wwwForm.AddField("user", User);
             wwwForm.AddField("name", levelName);
             wwwForm.AddField("level", level);
+            wwwForm.AddField("apikey", apiKey);
 
             WWW www = new WWW(URL, wwwForm);
             yield return www;
@@ -43,16 +44,25 @@ namespace Assets.Scripts
             }
         }
 
-        public static IEnumerator LoadLevel(string levelName){
+        public static IEnumerator LoadLevel(Action<string> callback, string levelName){
             WWWForm wwwForm = new WWWForm();
+            
             wwwForm.AddField("select", "true");
-            wwwForm.AddField("name",levelName);
+            wwwForm.AddField("name", levelName);
+            wwwForm.AddField("apikey", apiKey);
+            
             WWW www = new WWW(URL, wwwForm);
-            yield return www;
-            Debug.Log(www.text);
 
-            app.LevelToBeLoaded = www.text;
-            SceneManager.LoadScene("LoadLevel");
+            yield return www;
+            
+            if (www.error == null)
+            {
+                callback(www.text);
+            }
+            else
+            {
+                callback("Error");
+            }
             
         }
     }

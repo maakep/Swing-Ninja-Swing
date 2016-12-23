@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Assets.Scripts;
+using System;
 
 public class MainMenu : MonoBehaviour {
 
@@ -32,16 +33,28 @@ public class MainMenu : MonoBehaviour {
 
         //if textfield is empty, empty app.leveltobeloaded and load leveleditor.
         //else set app.leveltobeloaded to textfield in leveleditor do similar ifelse where it checks for map and loads it if possible.
-        string level = GameObject.Find("LevelEditorLoadLevelText").GetComponent<InputField>().text;
-        if (level == "" || level == null)
-        {
+        
+        string editLevelName = GameObject.Find("LevelEditorLoadLevelText").GetComponent<InputField>().text;
+
+        if (string.IsNullOrEmpty(editLevelName)){
             app.LevelToBeEdited = "";
+            SceneManager.LoadScene("LevelEditor");
+            return;
         }
-        else
+
+        StartCoroutine(DataLayer.LoadLevel((text) =>
         {
-            app.LevelToBeEdited = level;
-        }
-        SceneManager.LoadScene("LevelEditor");
+            if (!string.IsNullOrEmpty(text) && text != "Error")
+            {
+                app.LevelToBeEdited = text;
+                SceneManager.LoadScene("LevelEditor");
+            }
+            else
+            {
+                // Handle error, search file locally?
+                Debug.Log("Can't load level. Can't find level or no internet");
+            }
+        }, editLevelName));
     }
 
     void StartGame()
@@ -51,6 +64,18 @@ public class MainMenu : MonoBehaviour {
 
     void LoadLevel()
     {
-        StartCoroutine(DataLayer.LoadLevel(GameObject.Find("LoadLevelText").GetComponent<InputField>().text));
+        StartCoroutine(DataLayer.LoadLevel((text) =>
+        {
+            if (!string.IsNullOrEmpty(text) && text != "Error")
+            {
+                app.LevelToBeLoaded = text;
+                SceneManager.LoadScene("LoadLevel");
+            }
+            else
+            {
+                // Handle error, search file locally?
+                Debug.Log("Can't load level. Can't find level or no internet");
+            }
+        }, GameObject.Find("LoadLevelText").GetComponent<InputField>().text));
     }
 }

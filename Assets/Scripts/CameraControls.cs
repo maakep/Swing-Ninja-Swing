@@ -34,7 +34,7 @@ public class CameraControls : MonoBehaviour {
 
         // Scroll to zoom
         var scroll = Input.GetAxis("Mouse ScrollWheel");
-        thisCamera.orthographicSize -= scroll;
+        thisCamera.orthographicSize -= scroll*3;
 
         // Left click to select 
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -94,7 +94,7 @@ public class CameraControls : MonoBehaviour {
         
         if (Input.GetKey(KeyCode.Mouse2))
         {
-            speed = 2f;
+            speed = 4f;
             distance = Vector3.Distance(mousePos, Camera.main.transform.position);
 
             speed += distance;

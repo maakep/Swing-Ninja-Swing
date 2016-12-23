@@ -13,7 +13,7 @@ public class LevelEditor : MonoBehaviour {
     string json;
     string levelName;
 
-    bool saved;
+    bool saved = true;
 
     Button saveButton;
     Button backButton;
@@ -31,7 +31,6 @@ public class LevelEditor : MonoBehaviour {
 
         /*testButton = GameObject.Find("TestButton").GetComponent<Button>();
         testButton.onClick.AddListener(TestLevel);*/
-        
 	}
 
     private void Back()
@@ -48,7 +47,7 @@ public class LevelEditor : MonoBehaviour {
 
     private void TestLevel()
     {
-
+        // Load scene TestLevel
     }
 
     void SaveLevel()
@@ -81,16 +80,19 @@ public class LevelEditor : MonoBehaviour {
 
         
         json = JsonConvert.SerializeObject(obs);
-        /*Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "\\NinjaRope");
-        File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "\\NinjaRope\\level-" + levelName + "-" + SystemInfo.deviceUniqueIdentifier + ".json", json);*/
-        StartCoroutine(DataLayer.SaveLevel((cb) => {
-            if (cb != "" && cb != "Error")
+        
+        StartCoroutine(DataLayer.SaveLevel((text) => {
+            if (text != "" && text != "Error")
             {
                 SceneManager.LoadScene("MainMenu");
             }
             else
             {
-                // Handle the error
+                /*
+                 * Save locally?
+                 * 
+                 * Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "\\NinjaRope");
+                File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "\\NinjaRope\\level-" + levelName + "-" + SystemInfo.deviceUniqueIdentifier + ".json", json);*/
             }
         }, levelName, json));
     }
