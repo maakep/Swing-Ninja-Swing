@@ -25,7 +25,6 @@ namespace Assets.Scripts
         public static IEnumerator SaveLevel(Action<string> callback, string levelName, string level)
         {
             WWWForm wwwForm = new WWWForm();
-
             wwwForm.AddField("insert", "true");
             wwwForm.AddField("user", User);
             wwwForm.AddField("name", levelName);
@@ -34,6 +33,7 @@ namespace Assets.Scripts
 
             WWW www = new WWW(URL, wwwForm);
             yield return www;
+
             if (www.error == null)
             {
                 callback(www.text);
@@ -44,15 +44,13 @@ namespace Assets.Scripts
             }
         }
 
-        public static IEnumerator LoadLevel(Action<string> callback, string levelName){
+        public static IEnumerator GetLevel(Action<string> callback, string levelName){
             WWWForm wwwForm = new WWWForm();
-            
             wwwForm.AddField("select", "true");
             wwwForm.AddField("name", levelName);
             wwwForm.AddField("apikey", apiKey);
             
             WWW www = new WWW(URL, wwwForm);
-
             yield return www;
             
             if (www.error == null)
@@ -65,5 +63,56 @@ namespace Assets.Scripts
             }
             
         }
+
+        public static IEnumerator GetUserLevels(Action<string> callback)
+        {
+            WWWForm wwwForm = new WWWForm();
+            wwwForm.AddField("select", "true");
+            wwwForm.AddField("user", User);
+            wwwForm.AddField("apikey", apiKey);
+
+            WWW www = new WWW(URL, wwwForm);
+            yield return www;
+
+            if (www.error == null)
+            {
+                callback(www.text);
+            }
+            else
+            {
+                callback("Error");
+            }
+        }
+
+
+        public static IEnumerator DeleteLevel(Action<string> callback, string levelName)
+        {
+            WWWForm wwwForm = new WWWForm();
+            wwwForm.AddField("delete", "true");
+            wwwForm.AddField("name", levelName);
+            wwwForm.AddField("user", User);
+            wwwForm.AddField("apikey", apiKey);
+
+            WWW www = new WWW(URL, wwwForm);
+            yield return www;
+
+            if (www.error == null)
+            {
+                callback(www.text);
+            }
+            else
+            {
+                callback("Error");
+            }
+        }
+
+
+        public static void TestLevel(string level)
+        {
+            app.LevelJsonToBeTested = level;
+            app.LevelToBeEdited = level;
+        }
+
+
     }
 }

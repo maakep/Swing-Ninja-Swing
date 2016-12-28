@@ -16,8 +16,15 @@ public class PlayerObjective : MonoBehaviour {
         if (col.tag == "Player")
         {
             Debug.Log("Win level");
-            SceneManager.LoadScene("MainMenu");
-            // TODO: Load "level completed" and add to highscore
+            if (SceneManager.GetActiveScene().name == "TestLevel")
+            {
+                SceneManager.LoadScene("LevelEditor");
+            }
+            else
+            {
+                // TODO: Load "level completed" and add to highscore
+                SceneManager.LoadScene("WinScreen");
+            }
         }
     }
 }

@@ -31,6 +31,7 @@ public class LoadLevel : MonoBehaviour {
                 Vector3 scale = new Vector3(gb.ScaleX, gb.ScaleY, gb.ScaleZ);
 
                 GameObject blockObject = Instantiate(block, pos, Quaternion.identity) as GameObject;
+                blockObject.name = blockObject.name.Split('(')[0];
                 blockObject.transform.localScale = scale;
             }
         }
@@ -42,15 +43,7 @@ public class LoadLevel : MonoBehaviour {
 
     private string GetJson()
     {
-        if (SceneManager.GetActiveScene().name == "LevelEditor")
-        {
-            level = app.LevelToBeEdited;
-        } else {
-            level = app.LevelToBeLoaded;
-        }
-
-        if (string.IsNullOrEmpty(level))
-            return string.Empty;
+        level = GetLevelToLoad();
 
         /*var file = Directory.GetFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "\\NinjaRope", "level-" + level + "*.json");
         var json = "";
@@ -58,6 +51,27 @@ public class LoadLevel : MonoBehaviour {
         {
             json = File.ReadAllText(file[0]);
         }*/
+        return level;
+    }
+
+    private string GetLevelToLoad()
+    {
+        string level = "";
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "LevelEditor":
+                level = app.LevelToBeEdited;
+                break;
+
+            case "TestLevel":
+                level = app.LevelJsonToBeTested;
+                break;
+
+            default:
+                level = app.LevelToBeLoaded;
+                break;
+        }
+
         return level;
     }
 }

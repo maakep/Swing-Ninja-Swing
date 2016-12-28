@@ -42,7 +42,7 @@ public class MainMenu : MonoBehaviour {
             return;
         }
 
-        StartCoroutine(DataLayer.LoadLevel((text) =>
+        StartCoroutine(DataLayer.GetLevel((text) =>
         {
             if (!string.IsNullOrEmpty(text) && text != "Error")
             {
@@ -64,7 +64,7 @@ public class MainMenu : MonoBehaviour {
 
     void LoadLevel()
     {
-        StartCoroutine(DataLayer.LoadLevel((text) =>
+        StartCoroutine(DataLayer.GetLevel((text) =>
         {
             if (!string.IsNullOrEmpty(text) && text != "Error")
             {

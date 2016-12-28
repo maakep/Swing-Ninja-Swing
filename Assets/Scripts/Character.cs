@@ -281,4 +281,9 @@ public class Character : MonoBehaviour {
         timerText.text = "" + Mathf.Floor(_timer*100) / 100;
     }
 
+    void OnDestroy()
+    {
+        app.Timer = _timer;
+    }
+
 }

@@ -29,8 +29,8 @@ public class LevelEditor : MonoBehaviour {
         backButton = GameObject.Find("BackButton").GetComponent<Button>();
         backButton.onClick.AddListener(Back);
 
-        /*testButton = GameObject.Find("TestButton").GetComponent<Button>();
-        testButton.onClick.AddListener(TestLevel);*/
+        testButton = GameObject.Find("TestButton").GetComponent<Button>();
+        testButton.onClick.AddListener(TestLevel);
 	}
 
     private void Back()
@@ -47,12 +47,12 @@ public class LevelEditor : MonoBehaviour {
 
     private void TestLevel()
     {
-        // Load scene TestLevel
+        DataLayer.TestLevel(LevelToJson());
+        SceneManager.LoadScene("TestLevel");
     }
 
-    void SaveLevel()
+    string LevelToJson()
     {
-        levelName = GameObject.Find("LevelName").GetComponent<InputField>().text;
         GameObject[] gbs = GameObject.FindObjectsOfType<GameObject>();
         List<GameObject> gbl = new List<GameObject>();
         gbl.AddRange(gbs);
@@ -60,8 +60,9 @@ public class LevelEditor : MonoBehaviour {
         ObjectForJson[] obs = new ObjectForJson[gbl.Count];
 
         var i = 0;
+
         foreach (GameObject gb in gbl)
-        {              
+        {
             ObjectForJson ofj = new ObjectForJson();
 
             ofj.PositionX = gb.transform.position.x;
@@ -78,12 +79,20 @@ public class LevelEditor : MonoBehaviour {
             i++;
         }
 
-        
-        json = JsonConvert.SerializeObject(obs);
-        
+
+        return JsonConvert.SerializeObject(obs);
+    }
+
+    void SaveLevel()
+    {
+        levelName = GameObject.Find("LevelName").GetComponent<InputField>().text;
+
+        json = LevelToJson();
+
         StartCoroutine(DataLayer.SaveLevel((text) => {
             if (text != "" && text != "Error")
             {
+                Debug.Log(text);
                 SceneManager.LoadScene("MainMenu");
             }
             else
