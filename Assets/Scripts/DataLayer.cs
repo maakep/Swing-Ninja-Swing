@@ -12,13 +12,16 @@ namespace Assets.Scripts
     {
         const string URL = "http://hajkep.se/unity/NinjaRope/DbLayer.php";
         public static string User { get; set; }
-        static string apiKey = System.IO.File.ReadAllText(@"connections.config");
+        static string apiKey;
         static Persistent app;
 
         static DataLayer()
         {
             User = SystemInfo.deviceUniqueIdentifier;
             app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+            var api = Resources.Load("connections") as TextAsset;
+            apiKey = api.text;
+            
         }
 
 
