@@ -18,7 +18,14 @@ namespace Assets.Scripts
         static DataLayer()
         {
             User = SystemInfo.deviceUniqueIdentifier;
-            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+            try
+            {
+                app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+            }
+            catch (Exception)
+            {
+                SceneManager.LoadScene("_app");
+            }
             var api = Resources.Load("connections") as TextAsset;
             apiKey = api.text;
             
@@ -117,5 +124,10 @@ namespace Assets.Scripts
         }
 
 
+
+        internal static void CreateUser(string username, string password)
+        {
+            //do nuttin
+        }
     }
 }

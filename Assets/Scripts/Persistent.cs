@@ -10,6 +10,8 @@ public class Persistent : MonoBehaviour {
     public string LevelToBeEdited { get; set; }
     public string LevelJsonToBeTested { get; set; }
 
+    public string LoggedInUser { get; set; }
+
     // TODO
     public string[] CampaignLevels { get; set; }
 

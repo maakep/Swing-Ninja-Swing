@@ -15,17 +15,24 @@ public class MainMenu : MonoBehaviour {
 	// Use this for initialization
     void Start()
     {
-        app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        try
+        {
+            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        }catch(Exception){
+            SceneManager.LoadScene("_app");
+        }
 
         var levelEditorButton = GameObject.Find("LevelEditorButton").GetComponent<Button>();
-        var playButton = GameObject.Find("PlayButton").GetComponent<Button>();
-    
         levelEditorButton.onClick.AddListener(StartLevelEditor);
+
+        var playButton = GameObject.Find("PlayButton").GetComponent<Button>();
         playButton.onClick.AddListener(StartGame);
 
         var loadButton = GameObject.Find("LoadLevelButton").GetComponent<Button>();
-
         loadButton.onClick.AddListener(LoadLevel);
+
+        var loginButton = GameObject.Find("LoginButton").GetComponent<Button>();
+        loginButton.onClick.AddListener(LoadLogin);
     }
 
     void StartLevelEditor()
@@ -77,5 +84,17 @@ public class MainMenu : MonoBehaviour {
                 Debug.Log("Can't load level. Can't find level or no internet");
             }
         }, GameObject.Find("LoadLevelText").GetComponent<InputField>().text));
+    }
+
+    void LoadLogin()
+    {
+        if (string.IsNullOrEmpty(PlayerPrefs.GetString("PlayerLoggedIn")))
+        {
+            SceneManager.LoadScene("LoginScreen");
+        }
+        else
+        {
+            app.LoggedInUser = PlayerPrefs.GetString("PlayerLoggedIn");
+        }
     }
 }

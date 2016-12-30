@@ -12,7 +12,14 @@ public class LoadLevel : MonoBehaviour {
     
 	// Use this for initialization
 	void Start () {
-        app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        try
+        {
+            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        }
+        catch (System.Exception)
+        {
+            SceneManager.LoadScene("_app");
+        }
         LoadMap();
 	}
 

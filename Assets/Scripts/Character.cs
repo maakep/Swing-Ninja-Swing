@@ -69,7 +69,14 @@ public class Character : MonoBehaviour {
 
         _startingPos = transform.position;
 
-        app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        try
+        {
+            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        }
+        catch (System.Exception)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("_app");
+        }
 
         State = States.Playing;
 

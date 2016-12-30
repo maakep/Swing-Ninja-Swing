@@ -8,7 +8,14 @@ public class PlayerObjective : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        try
+        {
+            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        }
+        catch (System.Exception)
+        {
+            SceneManager.LoadScene("_app");
+        }
 	}
 	
     void OnTriggerEnter2D(Collider2D col)

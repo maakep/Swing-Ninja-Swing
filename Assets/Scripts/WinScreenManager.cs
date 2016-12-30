@@ -16,7 +16,14 @@ public class WinScreenManager : MonoBehaviour {
         var mainMenuButton = GameObject.Find("MainMenuButton").GetComponent<Button>();
         mainMenuButton.onClick.AddListener(LoadMenu);
 
-        app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        try
+        {
+            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        }
+        catch (System.Exception)
+        {
+            SceneManager.LoadScene("_app");
+        }
         var timerText = GameObject.Find("TimerText").GetComponent<Text>();
         timerText.text = app.Timer.ToString();
 	}

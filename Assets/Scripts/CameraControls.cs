@@ -20,7 +20,14 @@ public class CameraControls : MonoBehaviour {
     void Start()
     {
         thisCamera = GetComponent<Camera>();
-        app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        try
+        {
+            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        }
+        catch (System.Exception)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("_app");
+        }
         if (GameObject.Find("PlayerSpawn") == null && app.LevelToBeEdited == "")
         {
             spawn = (GameObject)Instantiate(Resources.Load("PlayerSpawn"));
