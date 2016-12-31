@@ -12,6 +12,8 @@ public class LoginScreenManager : MonoBehaviour {
     Canvas suCanvas;
     Canvas lgCanvas;
 
+    Canvas currentStateCanvas;
+
     Text signupFeedbackText;
     Text loginFeedbackText;
 
@@ -19,6 +21,8 @@ public class LoginScreenManager : MonoBehaviour {
 
     SuUserPass suUserPass;
     LgUserPass lgUserPass;
+
+    Persistent app;
 
     public struct SuUserPass
     {
@@ -33,6 +37,15 @@ public class LoginScreenManager : MonoBehaviour {
     }
 
 	void Start () {
+        try
+        {
+            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
+        }
+        catch (System.Exception)
+        {
+            SceneManager.LoadScene("_app");
+        }
+
         suCanvas = GameObject.Find("SignupCanvas").GetComponent<Canvas>();
         suCanvas.enabled = false;
         lgCanvas = GameObject.Find("LoginCanvas").GetComponent<Canvas>();
@@ -57,16 +70,11 @@ public class LoginScreenManager : MonoBehaviour {
 
         system = EventSystem.current;
 	}
-
-    private void LoginSubmit()
-    {
-        throw new System.NotImplementedException();
-    }
-
     private void LoginSignup()
     {
         suCanvas.enabled = true;
         lgCanvas.enabled = false;
+        currentStateCanvas = suCanvas;
     }
 
     private void Back()
@@ -75,10 +83,31 @@ public class LoginScreenManager : MonoBehaviour {
         {
             suCanvas.enabled = false;
             lgCanvas.enabled = true;
+            currentStateCanvas = lgCanvas;
         }
         else
         {
             SceneManager.LoadScene("MainMenu");
+        }
+    }
+
+    private void LoginSubmit()
+    {
+        var username = lgUserPass.Username.text;
+        var password = lgUserPass.Password.text;
+
+        if (ValidateInput(username, password))
+        {
+            // TODO: hash password
+            StartCoroutine(DataLayer.LoginUser(cb =>
+            {
+                if (cb != "error")
+                {
+                    app.LoggedInUser = cb;
+                    Debug.Log("Welcome " + app.LoggedInUser);
+                    SceneManager.LoadScene("MainMenu");
+                }
+            }, username, password));
         }
     }
 
@@ -87,15 +116,34 @@ public class LoginScreenManager : MonoBehaviour {
         var username = suUserPass.Username.text;
         var password = suUserPass.Password.text;
 
-        if(ValidateInput(username, password))
-            DataLayer.CreateUser(username, password);
+        if (ValidateInput(username, password)) {
+            
+            // TODO: hash password
+
+            StartCoroutine(DataLayer.CreateUser(cb => {
+                if (cb != "error")
+                {
+                    FeedbackText("User created, please go back and log in.");
+                }
+            }, username, password));
+        }
     }
 
     private bool ValidateInput(string user, string password)
     {
-        var bol = Regex.IsMatch(user, @"[a-zA-Z0-9]{1-35}") && Regex.IsMatch(password, @"[a-zA-Z0-9]{1-35}");
-        Debug.Log(bol);
-        return bol;
+        var allowed = Regex.IsMatch(user, @"[a-zA-Z0-9]+") && Regex.IsMatch(password, @"[a-zA-Z0-9]+");
+        if(!allowed){
+            StartCoroutine(FeedbackText("Illegal characters. Please use [a-z, A-Z, 0-9]"));
+        }
+        return allowed;
+    }
+
+    private IEnumerator FeedbackText(string text)
+    {
+        Text activeFeedbackText = (currentStateCanvas == suCanvas) ? signupFeedbackText : loginFeedbackText;
+        activeFeedbackText.text = text;
+        yield return new WaitForSeconds(3);
+        activeFeedbackText.text = string.Empty;
     }
 	
 	void Update () {
@@ -106,7 +154,7 @@ public class LoginScreenManager : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (suCanvas.enabled)
+            if (currentStateCanvas == suCanvas)
             {
                 SignupSubmit();
             }
@@ -118,7 +166,7 @@ public class LoginScreenManager : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (suCanvas.enabled)
+            if (currentStateCanvas == suCanvas)
             {
                 if (suUserPass.Username.isFocused)
                 {

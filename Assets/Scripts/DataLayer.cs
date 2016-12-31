@@ -57,6 +57,7 @@ namespace Assets.Scripts
         public static IEnumerator GetLevel(Action<string> callback, string levelName){
             WWWForm wwwForm = new WWWForm();
             wwwForm.AddField("select", "true");
+            wwwForm.AddField("getlevel", "true");
             wwwForm.AddField("name", levelName);
             wwwForm.AddField("apikey", apiKey);
             
@@ -78,6 +79,7 @@ namespace Assets.Scripts
         {
             WWWForm wwwForm = new WWWForm();
             wwwForm.AddField("select", "true");
+            wwwForm.AddField("getlevel", "true");
             wwwForm.AddField("user", User);
             wwwForm.AddField("apikey", apiKey);
 
@@ -116,6 +118,47 @@ namespace Assets.Scripts
             }
         }
 
+        public static IEnumerator CreateUser(Action<string> callback, string username, string password)
+        {
+            WWWForm wwwForm = new WWWForm();
+            wwwForm.AddField("insert", "true");
+            wwwForm.AddField("user", username);
+            wwwForm.AddField("pwd", password);
+            wwwForm.AddField("apikey", apiKey);
+
+            WWW www = new WWW(URL, wwwForm);
+            yield return www;
+
+            if (www.error == null)
+            {
+                callback(www.text);
+            }
+            else
+            {
+                callback("Error");
+            }
+        }
+
+        public static IEnumerator LoginUser(Action<string> callback, string username, string password)
+        {
+            WWWForm wwwForm = new WWWForm();
+            wwwForm.AddField("select", "true");
+            wwwForm.AddField("user", username);
+            wwwForm.AddField("pwd", password);
+            wwwForm.AddField("apikey", apiKey);
+
+            WWW www = new WWW(URL, wwwForm);
+            yield return www;
+
+            if (www.error == null)
+            {
+                callback(www.text);
+            }
+            else
+            {
+                callback("Error");
+            }
+        }
 
         public static void TestLevel(string level)
         {
@@ -123,11 +166,5 @@ namespace Assets.Scripts
             app.LevelToBeEdited = level;
         }
 
-
-
-        internal static void CreateUser(string username, string password)
-        {
-            //do nuttin
-        }
     }
 }

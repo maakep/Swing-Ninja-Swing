@@ -33,6 +33,11 @@ public class MainMenu : MonoBehaviour {
 
         var loginButton = GameObject.Find("LoginButton").GetComponent<Button>();
         loginButton.onClick.AddListener(LoadLogin);
+
+        if (!string.IsNullOrEmpty(app.LoggedInUser))
+        {
+            loginButton.transform.FindChild("Text").GetComponent<Text>().text = app.LoggedInUser;
+        }
     }
 
     void StartLevelEditor()
