@@ -99,9 +99,14 @@ public class LoginScreenManager : MonoBehaviour {
         if (ValidateInput(username, password))
         {
             // TODO: hash password
-            StartCoroutine(DataLayer.LoginUser(cb =>
+            StartCoroutine(DataLayer.LoginUser((cb, cb2) =>
             {
-                if (cb != "error")
+                if (cb2 == "Error" || cb2 != "true")
+                {
+                    Debug.Log(cb);
+                    StartCoroutine(FeedbackText(cb));
+                }
+                else
                 {
                     app.LoggedInUser = cb;
                     Debug.Log("Welcome " + app.LoggedInUser);
@@ -123,7 +128,7 @@ public class LoginScreenManager : MonoBehaviour {
             StartCoroutine(DataLayer.CreateUser(cb => {
                 if (cb != "error")
                 {
-                    FeedbackText("User created, please go back and log in.");
+                    StartCoroutine(FeedbackText("User created, please go back and log in."));
                 }
             }, username, password));
         }

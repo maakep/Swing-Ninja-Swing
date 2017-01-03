@@ -4,18 +4,18 @@ using UnityEngine.SceneManagement;
 
 public class PlayerObjective : MonoBehaviour {
 
-    Persistent app;
+    //Persistent app;
 
 	// Use this for initialization
 	void Start () {
-        try
+        /*try
         {
             app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
         }
         catch (System.Exception)
         {
             SceneManager.LoadScene("_app");
-        }
+        }*/
 	}
 	
     void OnTriggerEnter2D(Collider2D col)

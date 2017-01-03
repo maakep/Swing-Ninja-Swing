@@ -10,7 +10,7 @@ namespace Assets.Scripts
 {
     static class DataLayer
     {
-        const string URL = "http://hajkep.se/unity/NinjaRope/DbLayer.php";
+        public static string url;
         public static string User { get; set; }
         static string apiKey;
         static Persistent app;
@@ -26,9 +26,8 @@ namespace Assets.Scripts
             {
                 SceneManager.LoadScene("_app");
             }
-            var api = Resources.Load("connections") as TextAsset;
-            apiKey = api.text;
-            
+            apiKey = app.ApiKey;
+            url = app.DataLayerUrl;
         }
 
 
@@ -41,7 +40,7 @@ namespace Assets.Scripts
             wwwForm.AddField("level", level);
             wwwForm.AddField("apikey", apiKey);
 
-            WWW www = new WWW(URL, wwwForm);
+            WWW www = new WWW(url, wwwForm);
             yield return www;
 
             if (www.error == null)
@@ -61,7 +60,7 @@ namespace Assets.Scripts
             wwwForm.AddField("name", levelName);
             wwwForm.AddField("apikey", apiKey);
             
-            WWW www = new WWW(URL, wwwForm);
+            WWW www = new WWW(url, wwwForm);
             yield return www;
             
             if (www.error == null)
@@ -83,7 +82,7 @@ namespace Assets.Scripts
             wwwForm.AddField("user", User);
             wwwForm.AddField("apikey", apiKey);
 
-            WWW www = new WWW(URL, wwwForm);
+            WWW www = new WWW(url, wwwForm);
             yield return www;
 
             if (www.error == null)
@@ -105,7 +104,7 @@ namespace Assets.Scripts
             wwwForm.AddField("user", User);
             wwwForm.AddField("apikey", apiKey);
 
-            WWW www = new WWW(URL, wwwForm);
+            WWW www = new WWW(url, wwwForm);
             yield return www;
 
             if (www.error == null)
@@ -126,7 +125,7 @@ namespace Assets.Scripts
             wwwForm.AddField("pwd", password);
             wwwForm.AddField("apikey", apiKey);
 
-            WWW www = new WWW(URL, wwwForm);
+            WWW www = new WWW(url, wwwForm);
             yield return www;
 
             if (www.error == null)
@@ -139,7 +138,7 @@ namespace Assets.Scripts
             }
         }
 
-        public static IEnumerator LoginUser(Action<string> callback, string username, string password)
+        public static IEnumerator LoginUser(Action<string, string> callback, string username, string password)
         {
             WWWForm wwwForm = new WWWForm();
             wwwForm.AddField("select", "true");
@@ -147,16 +146,18 @@ namespace Assets.Scripts
             wwwForm.AddField("pwd", password);
             wwwForm.AddField("apikey", apiKey);
 
-            WWW www = new WWW(URL, wwwForm);
+            WWW www = new WWW(url, wwwForm);
             yield return www;
 
             if (www.error == null)
             {
-                callback(www.text);
+                string value;
+                www.responseHeaders.TryGetValue("Success", out value);
+                callback(www.text, value);
             }
             else
             {
-                callback("Error");
+                callback("Something went wrong, try again later", "Error");
             }
         }
 
