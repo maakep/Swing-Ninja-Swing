@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.IO;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System.Linq;
 
 public class LoadLevel : MonoBehaviour {
 
@@ -30,9 +32,13 @@ public class LoadLevel : MonoBehaviour {
             Debug.Log(levelJson);
             ObjectForJson[] level = JsonConvert.DeserializeObject<ObjectForJson[]>(GetJson());
 
+            List<GameObject> listObjects = Resources.LoadAll<GameObject>("EditorBlocks").ToList<GameObject>();
+            listObjects.Add(Resources.Load<GameObject>("PlayerSpawn"));
+
             foreach (ObjectForJson gb in level)
             {
-                UnityEngine.Object block = Resources.Load(gb.Name.Split(' ')[0]);
+                Debug.Log(gb.Name);
+                UnityEngine.Object block = listObjects.First(x => x.name == gb.Name);
 
                 Vector3 pos = new Vector3(gb.PositionX, gb.PositionY, gb.PositionZ);
                 Vector3 scale = new Vector3(gb.ScaleX, gb.ScaleY, gb.ScaleZ);

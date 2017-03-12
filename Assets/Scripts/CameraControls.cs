@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using Assets.Scripts;
 
 public class CameraControls : MonoBehaviour {
     float speed = 2f;
@@ -17,8 +19,12 @@ public class CameraControls : MonoBehaviour {
 
     Persistent app;
 
+    GameObject[] EditorObjects;
+
     void Start()
     {
+        EditorObjects = Resources.LoadAll<GameObject>("EditorBlocks");
+
         thisCamera = GetComponent<Camera>();
         try
         {
@@ -38,16 +44,18 @@ public class CameraControls : MonoBehaviour {
 	void Update () {
 
         mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        // Scroll to zoom
+        
+        #region Scroll to zoom
         var scroll = Input.GetAxis("Mouse ScrollWheel");
         thisCamera.orthographicSize -= scroll*3;
+        #endregion
 
+#region Left click
         // Left click to select 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            
             hit = Physics2D.Raycast(mousePos, Vector2.zero, mask);
+         
             if (hit.collider != null)
             {
                 selectedObject = hit.collider.gameObject;
@@ -58,7 +66,7 @@ public class CameraControls : MonoBehaviour {
         {
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                // Snap to grid
+                // Snap to grid - BUGGY
                 var newX = Mathf.Round((mousePos.x / 5) * 5);
                 var newY = Mathf.Round((mousePos.y / 5) * 5);
                 selectedObject.transform.position = (new Vector2(newX, newY));
@@ -67,27 +75,16 @@ public class CameraControls : MonoBehaviour {
             {
                 selectedObject.transform.position = (mousePos - offset);
             }
-            
-            
 
-            if (Input.GetKeyDown(KeyCode.W))
+            
+            if (ExtensionMethods.GetAnyOfKeysDown(KeyCode.W, KeyCode.D, KeyCode.A, KeyCode.S))
             {
-                selectedObject.transform.localScale = new Vector3(selectedObject.transform.localScale.x, selectedObject.transform.localScale.y + 1f, selectedObject.transform.localScale.z);
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                selectedObject.transform.localScale = new Vector3(selectedObject.transform.localScale.x + 1f, selectedObject.transform.localScale.y, selectedObject.transform.localScale.z);
-            }
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                selectedObject.transform.localScale = new Vector3(selectedObject.transform.localScale.x - 1f, selectedObject.transform.localScale.y, selectedObject.transform.localScale.z);
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                selectedObject.transform.localScale = new Vector3(selectedObject.transform.localScale.x, selectedObject.transform.localScale.y - 1f, selectedObject.transform.localScale.z);
+                StartCoroutine(ModifyScale());
             }
         }
+#endregion
 
+#region Right click
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             hit = Physics2D.Raycast(mousePos, Vector2.zero);
@@ -96,9 +93,10 @@ public class CameraControls : MonoBehaviour {
             {
                 Destroy(hit.collider.gameObject);
             }
-            
         }
-        
+#endregion
+
+#region Middle mouse button
         if (Input.GetKey(KeyCode.Mouse2))
         {
             speed = 4f;
@@ -109,43 +107,108 @@ public class CameraControls : MonoBehaviour {
             
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePos.x, mousePos.y, -10), step);
         }
+#endregion
 
-
+#region Number buttons
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            var spawn = Instantiate(Resources.Load("Ground"), mousePos, Quaternion.identity);
-            spawn.name = "Ground";
+            var spawn = Instantiate(EditorObjects[0], mousePos, Quaternion.identity);
+            spawn.name = spawn.name.Replace("(Clone)", string.Empty);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            var spawn = Instantiate(Resources.Load("PlayerObjective"), mousePos, Quaternion.identity);
-            spawn.name = "PlayerObjective";
+            var spawn = Instantiate(EditorObjects[1], mousePos, Quaternion.identity);
+            spawn.name = spawn.name.Replace("(Clone)", string.Empty);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            var spawn = Instantiate(Resources.Load("DeathZone"), mousePos, Quaternion.identity);
-            spawn.name = "DeathZone";
+            var spawn = Instantiate(EditorObjects[2], mousePos, Quaternion.identity);
+            spawn.name = spawn.name.Replace("(Clone)", string.Empty);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-
+            var spawn = Instantiate(EditorObjects[3], mousePos, Quaternion.identity);
+            spawn.name = spawn.name.Replace("(Clone)", string.Empty);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-
+            var spawn = Instantiate(EditorObjects[4], mousePos, Quaternion.identity);
+            spawn.name = spawn.name.Replace("(Clone)", string.Empty);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha7))
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
 
         }
-        if (Input.GetKeyDown(KeyCode.Alpha8))
+        else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
 
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
 
-	}
+        }
+#endregion
+    }
+
+    IEnumerator ModifyScale() {
+        Vector3 scaling = selectedObject.transform.localScale;
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            scaling.y += 1f;
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            scaling.x += 1f;
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            scaling.x -= 1f;
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            scaling.y -= 1f;
+        }
+        selectedObject.transform.localScale = scaling;
+        yield return new WaitForSeconds(0.4f);
+
+        int i = 0;
+        float incrementor = 1f;
+        while (ExtensionMethods.GetAnyOfKeys(KeyCode.W, KeyCode.D, KeyCode.A, KeyCode.S))
+        {
+            yield return new WaitForSeconds(0.1f);
+            if (Input.GetKey(KeyCode.W))
+            {
+                scaling.y += incrementor;
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                scaling.x += incrementor;
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                scaling.x -= incrementor;
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                scaling.y -= incrementor;
+            }
+
+            if (selectedObject != null)
+            {
+                selectedObject.transform.localScale = scaling;
+                
+                i++;
+
+                if (i % 20 == 0)
+                {
+                    incrementor *= 2;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
 }

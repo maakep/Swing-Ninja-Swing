@@ -56,7 +56,7 @@ public class LevelEditor : MonoBehaviour {
         GameObject[] gbs = GameObject.FindObjectsOfType<GameObject>();
         List<GameObject> gbl = new List<GameObject>();
         gbl.AddRange(gbs);
-        gbl.RemoveAll(PurgeUnwantedObjects);
+        gbl.RemoveAll(ShouldRemove);
         ObjectForJson[] obs = new ObjectForJson[gbl.Count];
 
         var i = 0;
@@ -106,9 +106,9 @@ public class LevelEditor : MonoBehaviour {
         }, levelName, json));
     }
 
-    private bool PurgeUnwantedObjects(GameObject obj)
+    private bool ShouldRemove(GameObject obj)
     {
-        return obj.tag == "MainCamera" || obj.tag == "LevelEditor" || obj.layer != SortingLayer.NameToID("UI");
+        return obj.layer == LayerMask.NameToLayer("LevelEditorIgnore") || obj.layer == LayerMask.NameToLayer("UI");
     }
 }
 

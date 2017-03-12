@@ -29,7 +29,7 @@ public class MainMenu : MonoBehaviour {
         playButton.onClick.AddListener(StartGame);
 
         var loadButton = GameObject.Find("LoadLevelButton").GetComponent<Button>();
-        loadButton.onClick.AddListener(LoadLevel);
+        loadButton.onClick.AddListener(() => LoadLevel());
 
         var loginButton = GameObject.Find("LoginButton").GetComponent<Button>();
         loginButton.onClick.AddListener(LoadLogin);
@@ -71,10 +71,10 @@ public class MainMenu : MonoBehaviour {
 
     void StartGame()
     {
-        SceneManager.LoadScene("prototype");
+        LoadLevel("bullseye");
     }
 
-    void LoadLevel()
+    void LoadLevel(string levelname = null)
     {
         StartCoroutine(DataLayer.GetLevel((text) =>
         {
@@ -88,7 +88,7 @@ public class MainMenu : MonoBehaviour {
                 // Handle error, search file locally?
                 Debug.Log("Can't load level. Can't find level or no internet");
             }
-        }, GameObject.Find("LoadLevelText").GetComponent<InputField>().text));
+        }, (levelname != null) ? levelname : GameObject.Find("LoadLevelText").GetComponent<InputField>().text));
     }
 
     void LoadLogin()
