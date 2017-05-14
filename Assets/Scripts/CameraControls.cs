@@ -17,8 +17,6 @@ public class CameraControls : MonoBehaviour {
     Vector2 offset;
     GameObject spawn;
 
-    Persistent app;
-
     GameObject[] EditorObjects;
 
     void Start()
@@ -26,15 +24,8 @@ public class CameraControls : MonoBehaviour {
         EditorObjects = Resources.LoadAll<GameObject>("EditorBlocks");
 
         thisCamera = GetComponent<Camera>();
-        try
-        {
-            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
-        }
-        catch (System.Exception)
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("_app");
-        }
-        if (GameObject.Find("PlayerSpawn") == null && app.LevelToBeEdited == "")
+
+        if (GameObject.Find("PlayerSpawn") == null && GameManager.LevelToBeEdited == "")
         {
             spawn = (GameObject)Instantiate(Resources.Load("PlayerSpawn"));
             spawn.name = "PlayerSpawn";
@@ -47,7 +38,7 @@ public class CameraControls : MonoBehaviour {
         
         #region Scroll to zoom
         var scroll = Input.GetAxis("Mouse ScrollWheel");
-        thisCamera.orthographicSize -= scroll*3;
+        thisCamera.orthographicSize -= scroll * 3;
         #endregion
 
         #region Left click

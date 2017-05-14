@@ -13,19 +13,10 @@ namespace Assets.Scripts
         public static string url;
         public static string User { get; set; }
         static string apiKey;
-        static Persistent app;
 
         static DataLayer()
         {
             User = SystemInfo.deviceUniqueIdentifier;
-            try
-            {
-                app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
-            }
-            catch (Exception)
-            {
-                SceneManager.LoadScene("_app");
-            }
             apiKey = Resources.Load<TextAsset>("api_key").text;
             url = Resources.Load<TextAsset>("api_url").text;
         }
@@ -163,8 +154,8 @@ namespace Assets.Scripts
 
         public static void TestLevel(string level)
         {
-            app.LevelJsonToBeTested = level;
-            app.LevelToBeEdited = level;
+            GameManager.LevelJsonToBeTested = level;
+            GameManager.LevelToBeEdited = level;
         }
 
     }

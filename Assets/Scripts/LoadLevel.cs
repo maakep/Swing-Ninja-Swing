@@ -8,20 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class LoadLevel : MonoBehaviour {
-
-    Persistent app;
     string level;
     
 	// Use this for initialization
 	void Start () {
-        try
-        {
-            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
-        }
-        catch (System.Exception)
-        {
-            SceneManager.LoadScene("_app");
-        }
         LoadMap();
 	}
 
@@ -73,15 +63,15 @@ public class LoadLevel : MonoBehaviour {
         switch (SceneManager.GetActiveScene().name)
         {
             case "LevelEditor":
-                level = app.LevelToBeEdited;
+                level = GameManager.LevelToBeEdited;
                 break;
 
             case "TestLevel":
-                level = app.LevelJsonToBeTested;
+                level = GameManager.LevelJsonToBeTested;
                 break;
 
             default:
-                level = app.LevelToBeLoaded;
+                level = GameManager.LevelToBeLoaded;
                 break;
         }
 

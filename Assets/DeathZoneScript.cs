@@ -12,9 +12,4 @@ public class DeathZoneScript : MonoBehaviour {
             GetComponent<SpriteRenderer>().enabled = true;
         }
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

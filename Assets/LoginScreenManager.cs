@@ -20,9 +20,7 @@ public class LoginScreenManager : MonoBehaviour {
     EventSystem system;
 
     SuUserPass suUserPass;
-    LgUserPass lgUserPass;
-
-    Persistent app;
+    LgUserPass lgUserPass;    
 
     public struct SuUserPass
     {
@@ -37,14 +35,6 @@ public class LoginScreenManager : MonoBehaviour {
     }
 
 	void Start () {
-        try
-        {
-            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
-        }
-        catch (System.Exception)
-        {
-            SceneManager.LoadScene("_app");
-        }
 
         suCanvas = GameObject.Find("SignupCanvas").GetComponent<Canvas>();
         suCanvas.enabled = false;
@@ -108,8 +98,8 @@ public class LoginScreenManager : MonoBehaviour {
                 }
                 else
                 {
-                    app.LoggedInUser = cb;
-                    Debug.Log("Welcome " + app.LoggedInUser);
+                    GameManager.LoggedInUser = cb;
+                    Debug.Log("Welcome " + GameManager.LoggedInUser);
                     SceneManager.LoadScene("MainMenu");
                 }
             }, username, password));

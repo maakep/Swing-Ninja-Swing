@@ -36,8 +36,6 @@ public class Character : MonoBehaviour {
 
     Vector3 prePauseVelocity;
 
-    Persistent app;
-
     private float _timer = 0;
 
     Text timerText;
@@ -68,15 +66,6 @@ public class Character : MonoBehaviour {
         GameObject.Find("Main Camera").GetComponent<FollowPlayer>().Init();
 
         _startingPos = transform.position;
-
-        try
-        {
-            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
-        }
-        catch (System.Exception)
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("_app");
-        }
 
         State = States.Playing;
 
@@ -290,7 +279,7 @@ public class Character : MonoBehaviour {
 
     void OnDestroy()
     {
-        app.Timer = _timer;
+        GameManager.Timer = _timer;
     }
 
 }

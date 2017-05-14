@@ -5,9 +5,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class WinScreenManager : MonoBehaviour {
-
-    Persistent app;
-
 	// Use this for initialization
 	void Start () {
         var replayButton = GameObject.Find("ReplayButton").GetComponent<Button>();
@@ -16,16 +13,8 @@ public class WinScreenManager : MonoBehaviour {
         var mainMenuButton = GameObject.Find("MainMenuButton").GetComponent<Button>();
         mainMenuButton.onClick.AddListener(LoadMenu);
 
-        try
-        {
-            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
-        }
-        catch (System.Exception)
-        {
-            SceneManager.LoadScene("_app");
-        }
         var timerText = GameObject.Find("TimerText").GetComponent<Text>();
-        timerText.text = app.Timer.ToString();
+        timerText.text = GameManager.Timer.ToString();
 	}
 
     void Reload()

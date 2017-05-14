@@ -7,21 +7,10 @@ using System;
 
 public class MainMenu : MonoBehaviour {
 
-    Persistent app;
     string levelName;
-
-
-
-	// Use this for initialization
+    
     void Start()
     {
-        try
-        {
-            app = GameObject.Find("ApplicationManager").GetComponent<Persistent>();
-        }catch(Exception){
-            SceneManager.LoadScene("_app");
-        }
-
         var levelEditorButton = GameObject.Find("LevelEditorButton").GetComponent<Button>();
         levelEditorButton.onClick.AddListener(StartLevelEditor);
 
@@ -34,9 +23,9 @@ public class MainMenu : MonoBehaviour {
         var loginButton = GameObject.Find("LoginButton").GetComponent<Button>();
         loginButton.onClick.AddListener(LoadLogin);
 
-        if (!string.IsNullOrEmpty(app.LoggedInUser))
+        if (!string.IsNullOrEmpty(GameManager.LoggedInUser))
         {
-            loginButton.transform.FindChild("Text").GetComponent<Text>().text = app.LoggedInUser;
+            loginButton.transform.FindChild("Text").GetComponent<Text>().text = GameManager.LoggedInUser;
         }
     }
 
@@ -49,7 +38,7 @@ public class MainMenu : MonoBehaviour {
         string editLevelName = GameObject.Find("LevelEditorLoadLevelText").GetComponent<InputField>().text;
 
         if (string.IsNullOrEmpty(editLevelName)){
-            app.LevelToBeEdited = "";
+            GameManager.LevelToBeEdited = "";
             SceneManager.LoadScene("LevelEditor");
             return;
         }
@@ -58,7 +47,7 @@ public class MainMenu : MonoBehaviour {
         {
             if (!string.IsNullOrEmpty(text) && text != "Error")
             {
-                app.LevelToBeEdited = text;
+                GameManager.LevelToBeEdited = text;
                 SceneManager.LoadScene("LevelEditor");
             }
             else
@@ -80,7 +69,7 @@ public class MainMenu : MonoBehaviour {
         {
             if (!string.IsNullOrEmpty(text) && text != "Error")
             {
-                app.LevelToBeLoaded = text;
+                GameManager.LevelToBeLoaded = text;
                 SceneManager.LoadScene("LoadLevel");
             }
             else
@@ -99,7 +88,7 @@ public class MainMenu : MonoBehaviour {
         }
         else
         {
-            app.LoggedInUser = PlayerPrefs.GetString("PlayerLoggedIn");
+            GameManager.LoggedInUser = PlayerPrefs.GetString("PlayerLoggedIn");
         }
     }
 }
