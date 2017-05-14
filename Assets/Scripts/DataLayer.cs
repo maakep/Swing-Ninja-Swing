@@ -26,8 +26,8 @@ namespace Assets.Scripts
             {
                 SceneManager.LoadScene("_app");
             }
-            apiKey = app.ApiKey;
-            url = app.DataLayerUrl;
+            apiKey = Resources.Load<TextAsset>("api_key").text;
+            url = Resources.Load<TextAsset>("api_url").text;
         }
 
 

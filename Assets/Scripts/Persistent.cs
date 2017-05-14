@@ -15,9 +15,6 @@ public class Persistent : MonoBehaviour {
     // TODO
     public string[] CampaignLevels { get; set; }
 
-    [Header("DataLayer data")]
-    public string ApiKey;
-    public string DataLayerUrl;
 
 	void Start () {
         DontDestroyOnLoad(gameObject);
