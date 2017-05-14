@@ -50,7 +50,7 @@ public class CameraControls : MonoBehaviour {
         thisCamera.orthographicSize -= scroll*3;
         #endregion
 
-#region Left click
+        #region Left click
         // Left click to select 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -84,7 +84,7 @@ public class CameraControls : MonoBehaviour {
         }
 #endregion
 
-#region Right click
+        #region Right click
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             hit = Physics2D.Raycast(mousePos, Vector2.zero);
@@ -96,7 +96,7 @@ public class CameraControls : MonoBehaviour {
         }
 #endregion
 
-#region Middle mouse button
+        #region Middle mouse button
         if (Input.GetKey(KeyCode.Mouse2))
         {
             speed = 4f;
@@ -109,7 +109,7 @@ public class CameraControls : MonoBehaviour {
         }
 #endregion
 
-#region Number buttons
+        #region Number buttons
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             var spawn = Instantiate(EditorObjects[0], mousePos, Quaternion.identity);
