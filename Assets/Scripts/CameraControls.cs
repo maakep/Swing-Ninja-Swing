@@ -128,6 +128,7 @@ public class CameraControls : MonoBehaviour {
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
+            typeof(Transform).GetProperty("position").SetValue(transform, new Vector3(0, 0, 0), null);
 
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7))

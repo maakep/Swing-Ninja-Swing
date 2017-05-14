@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Assets.Scripts;
 
 public class Character : MonoBehaviour {
     
     DistanceJoint2D joint;
     TrailRenderer trail;
     LineRenderer line;
+
+    GameObject ingamePauseMenu;
 
     Vector3 targetPos;
     RaycastHit2D hit;
@@ -22,7 +25,24 @@ public class Character : MonoBehaviour {
     private float _speed = 10f;
 
     private bool grounded;
-    private bool _hasBoost;
+
+    private GameObject _canvas;
+    #region Boost
+    private Image _boostImage;
+    private bool _privateHasBoost;
+    private bool _hasBoost
+    {
+        get
+        {
+            return _privateHasBoost;
+        }
+        set
+        {
+            _boostImage.enabled = value;
+            _privateHasBoost = value;
+        }
+    }
+    #endregion
 
     private List<int> hookedToArray;
 
@@ -65,9 +85,14 @@ public class Character : MonoBehaviour {
 
         anim = GetComponent<Animator>();
 
+        _canvas = GameObject.FindGameObjectWithTag("MainCanvas");
+        _boostImage = _canvas.transform.FindDeepChild("ActiveBoostImage").gameObject.GetComponent<Image>();
+
+        ingamePauseMenu = _canvas.FindObject("PauseMenu");
+        
         hookedToArray = new List<int>();
 
-        GameObject.Find("Main Camera").GetComponent<FollowPlayer>().Init();
+        Camera.main.GetComponent<FollowPlayer>().Init();
         _startingPos = transform.position;
         State = States.Playing;
         timerText = GameObject.Find("TimerText").GetComponent<Text>();
@@ -110,6 +135,7 @@ public class Character : MonoBehaviour {
         State = States.Playing;
         rb.isKinematic = false;
         rb.velocity = prePauseVelocity;
+        TogglePauseMenu();
     }
 
     private void PauseGame()
@@ -118,6 +144,14 @@ public class Character : MonoBehaviour {
         prePauseVelocity = rb.velocity;
         rb.velocity = Vector3.zero;
         rb.isKinematic = true;
+        TogglePauseMenu();
+    }
+
+    private bool _menuStateVisible = false;
+    private void TogglePauseMenu()
+    {
+        _menuStateVisible = !_menuStateVisible;
+        ingamePauseMenu.SetActive(_menuStateVisible);
     }
     
     void OnCollisionEnter2D(Collision2D col)
@@ -170,6 +204,7 @@ public class Character : MonoBehaviour {
         line.enabled = false;
         joint.enabled = false;
         trail.time = 0;
+        _hasBoost = true;
 
         transform.position = _startingPos;
         rb.velocity = Vector3.zero;
