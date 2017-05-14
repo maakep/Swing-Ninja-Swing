@@ -65,6 +65,27 @@ namespace Assets.Scripts
             
         }
 
+        public static IEnumerator GetAllLevels(Action<string> callback)
+        {
+            WWWForm wwwForm = new WWWForm();
+            wwwForm.AddField("select", "true");
+            wwwForm.AddField("getall", "true");
+            wwwForm.AddField("apikey", apiKey);
+
+            WWW www = new WWW(url, wwwForm);
+            yield return www;
+
+            if (www.error == null)
+            {
+                callback(www.text);
+            }
+            else
+            {
+                callback("Error");
+            }
+
+        }
+
         public static IEnumerator GetUserLevels(Action<string> callback)
         {
             WWWForm wwwForm = new WWWForm();

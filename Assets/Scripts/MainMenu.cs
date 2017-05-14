@@ -23,6 +23,9 @@ public class MainMenu : MonoBehaviour {
         var loginButton = GameObject.Find("LoginButton").GetComponent<Button>();
         loginButton.onClick.AddListener(LoadLogin);
 
+        var allLevelButton = GameObject.Find("AllLevelsButton").GetComponent<Button>();
+        allLevelButton.onClick.AddListener(LoadAllLevels);
+
         if (!string.IsNullOrEmpty(GameManager.LoggedInUser))
         {
             loginButton.transform.FindChild("Text").GetComponent<Text>().text = GameManager.LoggedInUser;
@@ -90,5 +93,10 @@ public class MainMenu : MonoBehaviour {
         {
             GameManager.LoggedInUser = PlayerPrefs.GetString("PlayerLoggedIn");
         }
+    }
+
+    private void LoadAllLevels()
+    {
+        SceneManager.LoadScene("AllLevelsBrowser");
     }
 }
