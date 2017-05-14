@@ -6,11 +6,13 @@ using UnityEngine.UI;
 public class Character : MonoBehaviour {
     
     DistanceJoint2D joint;
+    TrailRenderer trail;
+    LineRenderer line;
+
     Vector3 targetPos;
     RaycastHit2D hit;
     public LayerMask mask;
     Rigidbody2D rb;
-    LineRenderer line;
     Animator anim;
 
 
@@ -53,22 +55,21 @@ public class Character : MonoBehaviour {
         joint.enabled = false;
         
         rb = GetComponent<Rigidbody2D>();
-                
-        hookedToArray = new List<int>();
         
         line = GetComponent<LineRenderer>();
         line.enabled = false;
-        line.SetWidth(.1f, .1f);
-        line.SetColors(Color.gray, Color.black);
+        line.startWidth = .1f;
+        line.startColor = Color.green;
+
+        trail = GetComponent<TrailRenderer>();
 
         anim = GetComponent<Animator>();
 
+        hookedToArray = new List<int>();
+
         GameObject.Find("Main Camera").GetComponent<FollowPlayer>().Init();
-
         _startingPos = transform.position;
-
         State = States.Playing;
-
         timerText = GameObject.Find("TimerText").GetComponent<Text>();
 	}
 	
@@ -152,19 +153,30 @@ public class Character : MonoBehaviour {
     {
         if (col.gameObject.tag == "DeathZone")
         {
-            ResetLevel();
+            StartCoroutine(ResetLevel());
         }
     }
 
-    private void ResetLevel()
+    void OnTriggerExit2D(Collider2D col)
     {
-        transform.position = _startingPos;
-        rb.velocity = Vector3.zero;
-        
+        if (col.gameObject.tag == "LifeZone")
+        {
+            StartCoroutine(ResetLevel());
+        }
+    }
+
+    private IEnumerator ResetLevel()
+    {
         line.enabled = false;
         joint.enabled = false;
+        trail.time = 0;
+
+        transform.position = _startingPos;
+        rb.velocity = Vector3.zero;
 
         hookedToArray.Clear();
+        yield return new WaitForEndOfFrame();
+        trail.time = 3;
     }
 
 
