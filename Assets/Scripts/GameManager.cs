@@ -18,6 +18,8 @@ public static class GameManager {
 
     static GameManager()
     {
+        LoggedInUser = SystemInfo.deviceUniqueIdentifier;
+
         // Load maps in database table. Top 10 levels or so, manually inserted and updated.   CampaignLevels
         // Separate Highscore for these levels. Total highscore.
     }

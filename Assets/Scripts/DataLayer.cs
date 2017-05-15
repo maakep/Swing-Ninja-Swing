@@ -11,12 +11,10 @@ namespace Assets.Scripts
     static class DataLayer
     {
         public static string url;
-        public static string User { get; set; }
         static string apiKey;
 
         static DataLayer()
         {
-            User = SystemInfo.deviceUniqueIdentifier;
             apiKey = Resources.Load<TextAsset>("api_key").text;
             url = Resources.Load<TextAsset>("api_url").text;
         }
@@ -26,7 +24,7 @@ namespace Assets.Scripts
         {
             WWWForm wwwForm = new WWWForm();
             wwwForm.AddField("insert", "true");
-            wwwForm.AddField("user", User);
+            wwwForm.AddField("user", GameManager.LoggedInUser);
             wwwForm.AddField("name", levelName);
             wwwForm.AddField("level", level);
             wwwForm.AddField("apikey", apiKey);
@@ -91,7 +89,7 @@ namespace Assets.Scripts
             WWWForm wwwForm = new WWWForm();
             wwwForm.AddField("select", "true");
             wwwForm.AddField("getlevel", "true");
-            wwwForm.AddField("user", User);
+            wwwForm.AddField("user", GameManager.LoggedInUser);
             wwwForm.AddField("apikey", apiKey);
 
             WWW www = new WWW(url, wwwForm);
@@ -113,7 +111,7 @@ namespace Assets.Scripts
             WWWForm wwwForm = new WWWForm();
             wwwForm.AddField("delete", "true");
             wwwForm.AddField("name", levelName);
-            wwwForm.AddField("user", User);
+            wwwForm.AddField("user", GameManager.LoggedInUser);
             wwwForm.AddField("apikey", apiKey);
 
             WWW www = new WWW(url, wwwForm);

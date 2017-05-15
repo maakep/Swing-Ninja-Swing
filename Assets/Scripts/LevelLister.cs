@@ -40,6 +40,7 @@ public class LevelLister : MonoBehaviour {
             // TODO: Create multiple text components for name and username
             btn.transform.GetChild(0).GetComponent<Text>().text = level.Name + " [by: " + level.Username + "]";
             btn.GetComponent<Button>().onClick.AddListener(() => LoadLevel(level.SerializedLevel));
+            _contentArea.GetComponent<RectTransform>().sizeDelta += new Vector2(0, 30);
         }
     }
 
