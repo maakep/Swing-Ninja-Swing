@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Assets.Scripts;
+using UnityEngine.SceneManagement;
 
 public class Character : MonoBehaviour {
     
@@ -89,6 +90,9 @@ public class Character : MonoBehaviour {
         _boostImage = _canvas.transform.FindDeepChild("ActiveBoostImage").gameObject.GetComponent<Image>();
 
         ingamePauseMenu = _canvas.FindObject("PauseMenu");
+        ingamePauseMenu.transform.FindChild("Continue").GetComponent<Button>().onClick.AddListener(() => { ResumeGame(); });
+        ingamePauseMenu.transform.FindChild("Reset").GetComponent<Button>().onClick.AddListener(() => { ResumeGame(); StartCoroutine(ResetLevel()); });
+        ingamePauseMenu.transform.FindChild("Exit").GetComponent<Button>().onClick.AddListener(() => { SceneManager.LoadScene("MainMenu"); });
         
         hookedToArray = new List<int>();
 

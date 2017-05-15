@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Newtonsoft.Json;
-using System.Text.RegularExpressions;
-using System.IO;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
