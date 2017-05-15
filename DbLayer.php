@@ -1,6 +1,7 @@
 <?php
 if ($_POST['apikey'] == "A_key_of_your_choosing"){
 
+
 	class DbLayer {
 		public function DbLayer () {
 			$con = new mysqli("host","user","pwd","db");
@@ -15,9 +16,13 @@ if ($_POST['apikey'] == "A_key_of_your_choosing"){
 				$name = $con->real_Escape_string($_POST['name']);
 				$user = $con->real_Escape_string($_POST['user']);
 				$pwd = $con->real_Escape_string($_POST['pwd']);
+				$getall = $con->real_Escape_string($_POST['getall']);
 				$getLevel = $con->real_Escape_string($_POST['getlevel']);
 
-				if ($name || $user && $getLevel == "true") {
+				if ($getall == "true"){
+					DbLayer::GetAllLevels($con);
+				}
+				elseif ($name || $user && $getLevel == "true") {
 					DbLayer::GetLevel($name, $user, $con);
 				} elseif ($user && $pwd) {
 					DbLayer::LoginUser($user, $pwd, $con);
@@ -132,6 +137,22 @@ if ($_POST['apikey'] == "A_key_of_your_choosing"){
 			} else {
 				echo 'Error';
 			}
+		}
+
+		public function GetAllLevels($con){
+			$q = "Select Username, Name, SerializedLevel from NinjaRope_Levels";
+			$json = "[";
+
+			if ($res = $con->query($q)){
+				if ($res->num_rows > 0){
+					while ($row = $res->fetch_array(MYSQLI_ASSOC)){
+						$json .= json_encode($row) . ",";
+					}
+				}
+			}
+
+			$json .= "]";
+			echo $json;
 		}
 	}
 
