@@ -68,7 +68,7 @@ public class CameraControls : MonoBehaviour {
             }
 
             
-            if (ExtensionMethods.GetAnyOfKeysDown(KeyCode.W, KeyCode.D, KeyCode.A, KeyCode.S))
+            if (ExtensionMethods.GetAnyOfKeysDown(KeyCode.W, KeyCode.D, KeyCode.A, KeyCode.S) && notModifying)
             {
                 StartCoroutine(ModifyScale());
             }
@@ -141,7 +141,9 @@ public class CameraControls : MonoBehaviour {
 #endregion
     }
 
+    private bool notModifying = true;
     IEnumerator ModifyScale() {
+        notModifying = false;
         Vector3 scaling = selectedObject.transform.localScale;
         int i = 0;
         float incrementor = 1f;
@@ -187,5 +189,6 @@ public class CameraControls : MonoBehaviour {
             yield return new WaitForSeconds(waitTime);
             waitTime = 0.1f;
         }
+        notModifying = true;
     }
 }
