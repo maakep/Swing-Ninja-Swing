@@ -85,7 +85,8 @@ public class LevelEditor : MonoBehaviour {
 
     void SaveLevel()
     {
-        levelName = GameObject.Find("LevelName").GetComponent<InputField>().text;
+        var inputField = GameObject.Find("LevelName").GetComponent<InputField>();
+        levelName = inputField.text;
 
         json = LevelToJson();
 
@@ -93,7 +94,14 @@ public class LevelEditor : MonoBehaviour {
             if (text != "" && text != "Error")
             {
                 Debug.Log(text);
-                SceneManager.LoadScene("MainMenu");
+                if (text == "Level saved")
+                {
+                    SceneManager.LoadScene("MainMenu");
+                } else
+                {
+                    inputField.text = "Something went wrong, try another name: " + text;
+                    // TODO: This is bad^
+                }
             }
             else
             {

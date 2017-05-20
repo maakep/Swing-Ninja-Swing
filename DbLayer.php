@@ -17,13 +17,17 @@ if ($_POST['apikey'] == ""){
 				$pwd = $con->real_Escape_string($_POST['pwd']);
 				$getall = $con->real_Escape_string($_POST['getall']);
 				$getLevel = $con->real_Escape_string($_POST['getlevel']);
+				$getHighScoresForLevel = $con->real_Escape_string($_POST['GetAllHighscoresForLevel']);
 
 				if ($getall == "true"){
 					DbLayer::GetAllLevels($con);
+				} elseif ($getHighScoresForLevel == "true") {
+					DbLayer::GetHighscoresForLevel($name, $con);
 				}
 				elseif ($name || $user && $getLevel == "true") {
 					DbLayer::GetLevel($name, $user, $con);
-				} elseif ($user && $pwd) {
+				} 
+				elseif ($user && $pwd) {
 					DbLayer::LoginUser($user, $pwd, $con);
 				}
 			}
@@ -56,6 +60,12 @@ if ($_POST['apikey'] == ""){
 				}
 			}
 		}
+
+
+
+
+
+
 
 		public function Update($id, $level, $con){
 			if ($res = $con->query('update NinjaRope_Levels set SerializedLevel = "' . $level . '", LastModified = default where Id = "' . $id . '"')){
@@ -91,6 +101,21 @@ if ($_POST['apikey'] == ""){
 			} else {
 				echo $con->error;
 			}
+		}
+
+		public function GetHighscoresForLevel($levelname, $con){
+			$q = 'select * from NinjaRope_Highscore where LevelName = "' . $levelname . '" order by Score asc limit 3';
+
+			$json = '[';
+			if ($res = $con->query($q)) {
+				if($res->num_rows > 0){
+					while ($row = $res->fetch_array(MYSQLI_ASSOC)){
+						$json .= json_encode($row) . ",";
+					}
+				}
+			}
+			$json .= ']';
+			echo $json;
 		}
 
 		public function CreateUser($user, $pwd, $con){

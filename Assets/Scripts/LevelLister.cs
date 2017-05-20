@@ -18,7 +18,6 @@ public class LevelLister : MonoBehaviour {
             DataLayer.GetAllLevels(
                 (list) =>
                 {
-                    Debug.Log(list);
                     LevelList[] levels = JsonConvert.DeserializeObject<LevelList[]>(list);
                     Generate(levels);
                 }

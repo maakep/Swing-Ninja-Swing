@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,14 +50,11 @@ namespace Assets.Scripts
                 yield break;
             }
 
-            Debug.Log("Inserting highscore");
-
             WWWForm wwwForm = NewForm();
             wwwForm.AddField("insert", "true");
             wwwForm.AddField("user", GameManager.LoggedInUser);
             wwwForm.AddField("name", levelName);
             wwwForm.AddField("highscore", score.ToString());
-            
 
             WWW www = new WWW(url, wwwForm);
             yield return www;
@@ -88,7 +86,7 @@ namespace Assets.Scripts
                 callback("Error");
             }
         }
-        public static IEnumerator GetAllHighscoresForLevel(Action<string> callback, string levelName)
+        public static IEnumerator GetAllHighscoresForLevel(Action<Highscore[]> callback, string levelName)
         {
             WWWForm wwwForm = NewForm();
             wwwForm.AddField("select", "true");
@@ -100,11 +98,12 @@ namespace Assets.Scripts
 
             if (www.error == null)
             {
-                callback(www.text);
+                Debug.Log(www.text);
+                callback(JsonConvert.DeserializeObject<Highscore[]>(www.text));
             }
             else
             {
-                callback("Error");
+                callback(null);
             }
         }
         public static IEnumerator GetUserScoreForLevel(Action<string> callback, string levelName)

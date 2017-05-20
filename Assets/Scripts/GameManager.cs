@@ -35,7 +35,33 @@ public class Level
 
     public Level(string levelName = null, string level = null)
     {
-        this.Name = levelName;
-        this.Json = level;
+        Name = levelName;
+        Json = level;
     }
 }
+
+
+public class Highscore
+{
+    public string User { get; set; }
+    public string LevelName { get; set; }
+    public string Score { get; set; }
+    public string Date { get; set; }
+
+    public Highscore(
+        string user = null,
+        string levelName = null,
+        string score = null,
+        string date = null)
+    {
+        User = user;
+        LevelName = levelName;
+        Score = score;
+        Date = date;
+    }
+}
+/* 
+ * 
+ * [{"User":"USR","LevelName":"LVL","Score":"SCR","Date":"DAT"},{"User":"USR2","LevelName":"LVL2","Score":"SCR2","Date":"DAT2"}] 
+ *  
+ */
