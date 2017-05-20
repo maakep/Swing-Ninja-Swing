@@ -1,10 +1,9 @@
 <?php
-if ($_POST['apikey'] == "A_key_of_your_choosing"){
-
+if ($_POST['apikey'] == ""){
 
 	class DbLayer {
 		public function DbLayer () {
-			$con = new mysqli("host","user","pwd","db");
+			$con = new mysqli("");
 			if ($con->connect_errno)
 			{
 				echo "Failed to connect to db: " . $con->connect_error;
@@ -34,8 +33,11 @@ if ($_POST['apikey'] == "A_key_of_your_choosing"){
 				$level = $con->real_Escape_string($_POST['level']);
 				$user = $con->real_Escape_string($_POST['user']);
 				$pwd = $con->real_Escape_string($_POST['pwd']);
+				$highscore = $con->real_Escape_string($_POST['highscore']);
 				
-				if ($level && $name && $user) {
+				if ($highscore){
+					DbLayer::InsertHighscore($highscore, $name, $user, $con);
+				} elseif ($level && $name && $user) {
 					DBLayer::InsertLevel($level, $name, $user, $con);
 				} elseif ($user && $pwd) {
 					DBLayer::CreateUser($user, $pwd, $con);
@@ -77,6 +79,15 @@ if ($_POST['apikey'] == "A_key_of_your_choosing"){
 						echo $con->error;
 					}
 				}
+			} else {
+				echo $con->error;
+			}
+		}
+
+		public function InsertHighscore($highscore, $name, $user, $con){
+			$q = 'insert into NinjaRope_Highscore (User, LevelName, Score) values ("'. $user .'", "'. $name .'", '. $highscore .') on duplicate key update Score=LEAST(Score, VALUES(Score))';
+			if ($res = $con->query($q)){
+				echo 'Score saved';
 			} else {
 				echo $con->error;
 			}

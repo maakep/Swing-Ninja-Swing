@@ -68,7 +68,7 @@ public class LoadLevel : MonoBehaviour {
                 break;
 
             default:
-                level = GameManager.LevelToBeLoaded;
+                level = GameManager.LevelToBeLoaded.Json;
                 break;
         }
 

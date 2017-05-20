@@ -39,14 +39,14 @@ public class LevelLister : MonoBehaviour {
             var btn = Instantiate(Button, _contentArea.transform);
             // TODO: Create multiple text components for name and username
             btn.transform.GetChild(0).GetComponent<Text>().text = level.Name + " [by: " + level.Username + "]";
-            btn.GetComponent<Button>().onClick.AddListener(() => LoadLevel(level.SerializedLevel));
+            btn.GetComponent<Button>().onClick.AddListener(() => LoadLevel(level.SerializedLevel, level.Name));
             _contentArea.GetComponent<RectTransform>().sizeDelta += new Vector2(0, 30);
         }
     }
 
-    private void LoadLevel(string level)
+    private void LoadLevel(string level, string levelName)
     {
-        GameManager.LevelToBeLoaded = level;
+        GameManager.LevelToBeLoaded = new Level(levelName, level);
         SceneManager.LoadScene("LoadLevel");
     }
 

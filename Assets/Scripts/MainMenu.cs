@@ -7,8 +7,6 @@ using System;
 
 public class MainMenu : MonoBehaviour {
 
-    string levelName;
-    
     void Start()
     {
         var levelEditorButton = GameObject.Find("LevelEditorButton").GetComponent<Button>();
@@ -68,11 +66,13 @@ public class MainMenu : MonoBehaviour {
 
     void LoadLevel(string levelname = null)
     {
+        levelname = levelname ?? GameObject.Find("LoadLevelText").GetComponent<InputField>().text;
+
         StartCoroutine(DataLayer.GetLevel((text) =>
         {
             if (!string.IsNullOrEmpty(text) && text != "Error")
             {
-                GameManager.LevelToBeLoaded = text;
+                GameManager.LevelToBeLoaded = new Level(levelname, text);
                 SceneManager.LoadScene("LoadLevel");
             }
             else
@@ -80,7 +80,7 @@ public class MainMenu : MonoBehaviour {
                 // Handle error, search file locally?
                 Debug.Log("Can't load level. Can't find level or no internet");
             }
-        }, (levelname != null) ? levelname : GameObject.Find("LoadLevelText").GetComponent<InputField>().text));
+        }, levelname));
     }
 
     void LoadLogin()

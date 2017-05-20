@@ -6,7 +6,7 @@ public static class GameManager {
 
     public static float Timer { get; set; }
 
-    public static string LevelToBeLoaded { get; set; }
+    public static Level LevelToBeLoaded { get; set; }
     public static string LevelToBeEdited { get; set; }
     public static string LevelJsonToBeTested { get; set; }
 
@@ -25,4 +25,17 @@ public static class GameManager {
     }
 
     
+}
+
+
+public class Level
+{
+    public string Name { get; set; }
+    public string Json { get; set; }
+
+    public Level(string levelName = null, string level = null)
+    {
+        this.Name = levelName;
+        this.Json = level;
+    }
 }

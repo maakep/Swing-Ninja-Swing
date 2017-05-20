@@ -98,47 +98,36 @@ public class CameraControls : MonoBehaviour {
             
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePos.x, mousePos.y, -10), step);
         }
-#endregion
+        #endregion
 
         #region Number buttons
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        List<KeyCode> hotkeys = new List<KeyCode>()
         {
-            var spawn = Instantiate(EditorObjects[0], mousePos, Quaternion.identity);
-            spawn.name = spawn.name.Replace("(Clone)", string.Empty);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            var spawn = Instantiate(EditorObjects[1], mousePos, Quaternion.identity);
-            spawn.name = spawn.name.Replace("(Clone)", string.Empty);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            var spawn = Instantiate(EditorObjects[2], mousePos, Quaternion.identity);
-            spawn.name = spawn.name.Replace("(Clone)", string.Empty);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            var spawn = Instantiate(EditorObjects[3], mousePos, Quaternion.identity);
-            spawn.name = spawn.name.Replace("(Clone)", string.Empty);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            var spawn = Instantiate(EditorObjects[4], mousePos, Quaternion.identity);
-            spawn.name = spawn.name.Replace("(Clone)", string.Empty);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
+            KeyCode.Alpha1,
+            KeyCode.Alpha2,
+            KeyCode.Alpha3,
+            KeyCode.Alpha4,
+            KeyCode.Alpha5,
+            KeyCode.Alpha6,
+            KeyCode.Alpha7,
+            KeyCode.Alpha8,
+            KeyCode.Alpha9,
+            KeyCode.Alpha0,
+        };
 
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha7))
+        foreach (var hotkey in hotkeys)
         {
-
+            if (Input.GetKeyDown(hotkey))
+            {
+                if (hotkeys.IndexOf(hotkey) < EditorObjects.Length)
+                {
+                    var obj = EditorObjects[hotkeys.IndexOf(hotkey)];
+                    var spawn = Instantiate(obj, mousePos, Quaternion.identity);
+                    spawn.name = spawn.name.Replace("(Clone)", string.Empty);
+                }
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-
-        }
-#endregion
+        #endregion
     }
 
     private bool notModifying = true;
