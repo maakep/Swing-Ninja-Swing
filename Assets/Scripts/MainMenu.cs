@@ -26,7 +26,7 @@ public class MainMenu : MonoBehaviour {
         var allLevelButton = GameObject.Find("AllLevelsButton").GetComponent<Button>();
         allLevelButton.onClick.AddListener(LoadAllLevels);
 
-        if (!string.IsNullOrEmpty(GameManager.LoggedInUser))
+        if (!string.IsNullOrEmpty(GameManager.LoggedInUser) && GameManager.LoggedInUser != SystemInfo.deviceUniqueIdentifier)
         {
             loginButton.transform.FindChild("Text").GetComponent<Text>().text = GameManager.LoggedInUser;
         }
