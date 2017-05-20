@@ -143,31 +143,13 @@ public class CameraControls : MonoBehaviour {
 
     IEnumerator ModifyScale() {
         Vector3 scaling = selectedObject.transform.localScale;
-
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            scaling.y += 1f;
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            scaling.x += 1f;
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            scaling.x -= 1f;
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            scaling.y -= 1f;
-        }
-        selectedObject.transform.localScale = scaling;
-        yield return new WaitForSeconds(0.4f);
-
         int i = 0;
         float incrementor = 1f;
+        float waitTime = 0.4f;
+
         while (ExtensionMethods.GetAnyOfKeys(KeyCode.W, KeyCode.D, KeyCode.A, KeyCode.S))
         {
-            yield return new WaitForSeconds(0.1f);
+            
             if (Input.GetKey(KeyCode.W))
             {
                 scaling.y += incrementor;
@@ -187,7 +169,8 @@ public class CameraControls : MonoBehaviour {
 
             if (selectedObject != null)
             {
-                selectedObject.transform.localScale = scaling;
+                if (scaling.x > 0 && scaling.y > 0)
+                    selectedObject.transform.localScale = scaling;
                 
                 i++;
 
@@ -200,6 +183,9 @@ public class CameraControls : MonoBehaviour {
             {
                 break;
             }
+
+            yield return new WaitForSeconds(waitTime);
+            waitTime = 0.1f;
         }
     }
 }
