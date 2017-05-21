@@ -1,0 +1,29 @@
+--Users
+CREATE TABLE IF NOT EXISTS `NinjaRope_Users` (
+  `Username` varchar(255) NOT NULL,
+  `Password` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `LastLoggedIn` datetime NOT NULL,
+  PRIMARY KEY (`Username`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+-- Levels
+CREATE TABLE IF NOT EXISTS `NinjaRope_Levels` (
+  `ID` int(255) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(125) COLLATE utf8_bin NOT NULL,
+  `SerializedLevel` longtext COLLATE utf8_bin NOT NULL,
+  `LastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Username` varchar(125) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `Name` (`Name`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=20 ;
+
+
+-- Highscore
+CREATE TABLE IF NOT EXISTS `NinjaRope_Highscore` (
+  `User` varchar(125) COLLATE utf8_bin NOT NULL,
+  `LevelName` varchar(125) COLLATE utf8_bin NOT NULL,
+  `Score` float NOT NULL,
+  `Date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`User`,`LevelName`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

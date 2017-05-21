@@ -112,13 +112,10 @@ public class LoginScreenManager : MonoBehaviour {
         var password = suUserPass.Password.text;
 
         if (ValidateInput(username, password)) {
-            
-            // TODO: hash password
-
             StartCoroutine(DataLayer.CreateUser(cb => {
                 if (cb != "error")
                 {
-                    StartCoroutine(FeedbackText("User created, please go back and log in."));
+                    StartCoroutine(FeedbackText(cb));
                 }
             }, username, password));
         }
@@ -126,9 +123,9 @@ public class LoginScreenManager : MonoBehaviour {
 
     private bool ValidateInput(string user, string password)
     {
-        var allowed = Regex.IsMatch(user, @"[a-zA-Z0-9]+") && Regex.IsMatch(password, @"[a-zA-Z0-9]+");
+        var allowed = Regex.IsMatch(user, @"[a-zA-Z0-9]+") && Regex.IsMatch(password, @"[a-zA-Z0-9!#¤%&/()=@£$€{}]{5,}");
         if(!allowed){
-            StartCoroutine(FeedbackText("Illegal characters. Please use [a-z, A-Z, 0-9]"));
+            StartCoroutine(FeedbackText("Illegal characters. Please use [a-z, A-Z, 0-9]. Password has to be at least 5 characters"));
         }
         return allowed;
     }
@@ -137,7 +134,7 @@ public class LoginScreenManager : MonoBehaviour {
     {
         Text activeFeedbackText = (currentStateCanvas == suCanvas) ? signupFeedbackText : loginFeedbackText;
         activeFeedbackText.text = text;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(7);
         activeFeedbackText.text = string.Empty;
     }
 	

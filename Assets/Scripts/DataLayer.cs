@@ -224,7 +224,7 @@ namespace Assets.Scripts
             WWWForm wwwForm = NewForm();
             wwwForm.AddField("insert", "true");
             wwwForm.AddField("user", username);
-            wwwForm.AddField("pwd", password);
+            wwwForm.AddField("pwd", SecurityHelper.HashedPassword(password));
             
 
             WWW www = new WWW(url, wwwForm);
@@ -245,7 +245,7 @@ namespace Assets.Scripts
             WWWForm wwwForm = NewForm();
             wwwForm.AddField("select", "true");
             wwwForm.AddField("user", username);
-            wwwForm.AddField("pwd", password);
+            wwwForm.AddField("pwd", SecurityHelper.HashedPassword(password));
 
             WWW www = new WWW(url, wwwForm);
             yield return www;
@@ -275,5 +275,17 @@ namespace Assets.Scripts
             return wwwForm;
         }
 
+    }
+}
+
+
+public class SecurityHelper
+{
+    public static string HashedPassword(string pwd)
+    {
+        byte[] data = Encoding.ASCII.GetBytes(pwd);
+        data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
+        string hash = Encoding.ASCII.GetString(data);
+        return hash;
     }
 }
