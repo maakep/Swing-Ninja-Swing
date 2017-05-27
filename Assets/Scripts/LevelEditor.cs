@@ -73,6 +73,8 @@ public class LevelEditor : MonoBehaviour {
             ofj.ScaleY = gb.transform.localScale.y;
             ofj.ScaleZ = gb.transform.localScale.z;
 
+            ofj.RotationZ = gb.transform.localRotation.z;
+
             ofj.Name = gb.name;
 
             obs[i] = ofj;
@@ -132,4 +134,6 @@ class ObjectForJson
     public float ScaleX { get; set; }
     public float ScaleY  { get; set; }
     public float ScaleZ { get; set; }
+
+    public float RotationZ { get; set; }
 }

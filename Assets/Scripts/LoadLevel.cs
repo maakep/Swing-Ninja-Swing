@@ -29,8 +29,10 @@ public class LoadLevel : MonoBehaviour {
 
                 Vector3 pos = new Vector3(gb.PositionX, gb.PositionY, gb.PositionZ);
                 Vector3 scale = new Vector3(gb.ScaleX, gb.ScaleY, gb.ScaleZ);
+                Quaternion rot = Quaternion.identity;
+                rot.z = gb.RotationZ;
 
-                GameObject blockObject = Instantiate(block, pos, Quaternion.identity) as GameObject;
+                GameObject blockObject = Instantiate(block, pos, rot) as GameObject;
                 blockObject.name = blockObject.name.Split('(')[0];
                 blockObject.transform.localScale = scale;
             }

@@ -17,7 +17,18 @@ namespace Assets.Scripts
                     return true;
                 }
             }
-            
+            return false;
+        }
+
+        public static bool GetAnyOfKeysUp(params KeyCode[] keycodes)
+        {
+            foreach (var code in keycodes)
+            {
+                if (Input.GetKeyUp(code))
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
